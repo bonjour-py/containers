@@ -1,25 +1,11 @@
-FROM quay.io/toolbx-images/debian-toolbox:testing
+FROM ghcr.io/bonjour-py/images/toolbox/deepin-wine
 
 RUN set -eux; \
 	apt update; \
 	apt upgrade -y; \
 	rm -rf /var/lib/apt/lists/*;
-	
-# Chinese
-RUN set -eux; \
-	apt update; \
-	apt install -y locales; \
-	apt clean; \
-	rm -rf /var/lib/apt/lists/*; \
-	\
-	ln -sf ../usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
-	\
-	sed -i -e 's@# zh_CN.UTF-8@zh_CN.UTF-8@' /etc/locale.gen; \
-	locale-gen; \
-	echo 'LANG=zh_CN.UTF-8' | tee /etc/locale.conf;
 
 RUN set -eux; \
-	wget -O- https://deepin-wine.i-m.dev/setup.sh | sh; \
 	apt update; \
 	apt install -y libsane1=1.2.1-5deepin1+rb1 libsane-common=1.2.1-5deepin1+rb1 com.qq.weixin.work.deepin; \
 	apt autoremove -y; \

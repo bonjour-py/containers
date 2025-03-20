@@ -1,0 +1,21 @@
+FROM quay.io/toolbx-images/debian-toolbox:testing
+
+RUN set -eux; \
+	apt update; \
+	apt upgrade -y; \
+	rm -rf /var/lib/apt/lists/*;
+	
+# Chinese
+RUN set -eux; \
+	apt update; \
+	apt install -y locales; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	ln -sf ../usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
+	\
+	sed -i -e 's@# zh_CN.UTF-8@zh_CN.UTF-8@' /etc/locale.gen; \
+	locale-gen; \
+	echo 'LANG=zh_CN.UTF-8' | tee /etc/locale.conf;
+
+RUN wget -O- https://deepin-wine.i-m.dev/setup.sh | sh;

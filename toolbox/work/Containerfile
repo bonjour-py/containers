@@ -1,9 +1,14 @@
-FROM ghcr.io/bonjour-py/os/kali
-FROM localhost/kali
+FROM ghcr.io/bonjour-py/images/toolbox/kali
 
 RUN set -eux; \
 	apt update; \
 	apt upgrade -y; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	apt update; \
+	apt install -y kali-system-cli; \
+	apt clean; \
 	rm -rf /var/lib/apt/lists/*;
 
 RUN set -eux; \
