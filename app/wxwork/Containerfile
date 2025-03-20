@@ -1,0 +1,31 @@
+FROM quay.io/toolbx-images/debian-toolbox:testing
+
+RUN set -eux; \
+	apt update; \
+	apt upgrade -y; \
+	rm -rf /var/lib/apt/lists/*;
+	
+# Chinese
+RUN set -eux; \
+	apt update; \
+	apt install -y locales; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	ln -sf ../usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
+	\
+	sed -i -e 's@# zh_CN.UTF-8@zh_CN.UTF-8@' /etc/locale.gen; \
+	locale-gen; \
+	echo 'LANG=zh_CN.UTF-8' | tee /etc/locale.conf;
+
+RUN set -eux; \
+	wget -O- https://deepin-wine.i-m.dev/setup.sh | sh; \
+	apt update; \
+	apt install -y libsane1=1.2.1-5deepin1+rb1 libsane-common=1.2.1-5deepin1+rb1 com.qq.weixin.work.deepin; \
+	apt autoremove -y; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*;  \
+	\
+	sed -i -e 's@7z x "$APPDIR/$APPTAR" -o"$1"@7z x "$APPDIR/$APPTAR" -o"$1" || true@g' /opt/deepinwine/tools/run.sh /opt/deepinwine/tools/run_v2.sh /opt/deepinwine/tools/run_v3.sh /opt/deepinwine/tools/run_v4.sh; \
+	sed -i -e 's@Icon=com.qq.weixin.work.deepin@Icon=/opt/apps/com.qq.weixin.work.deepin/entries/icons/hicolor/48x48/apps/com.qq.weixin.work.deepin.svg@' /opt/apps/com.qq.weixin.work.deepin/entries/applications/com.qq.weixin.work.deepin.desktop; \
+	ln -sf /opt/apps/com.qq.weixin.work.deepin/entries/applications/com.qq.weixin.work.deepin.desktop /usr/share/applications/;

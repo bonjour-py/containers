@@ -1,0 +1,31 @@
+FROM docker.io/kalilinux/kali-rolling
+
+LABEL com.github.containers.toolbox=true
+
+RUN set -eux; \
+	apt update; \
+	apt upgrade -y; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	apt update; \
+	apt install -y libcap2-bin; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	sed -Ei 's/^(hosts:.*)(\<files\>)\s*(.*)/\1\2 myhostname \3/' /etc/nsswitch.conf; \
+	apt update; \
+	apt install -y libnss-myhostname; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	rm /etc/apt/apt.conf.d/docker-gzip-indexes; \
+	rm /etc/apt/apt.conf.d/docker-no-languages;
+
+RUN set -eux; \
+	apt update; \
+	apt install -y kali-linux-core; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*; \
+	sed -i -e 's/ ALL$/ NOPASSWD:ALL/' /etc/sudoers; 
