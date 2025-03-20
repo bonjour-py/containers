@@ -1,4 +1,4 @@
-FROM ghcr.io/bonjour-py/images/toolbox/kali
+FROM ghcr.io/bonjour-py/toolbox/kali
 
 RUN set -eux; \
 	apt update; \
@@ -29,9 +29,10 @@ RUN set -eux; \
 	locale-gen; \
 	echo 'LANG=zh_CN.UTF-8' | tee /etc/locale.conf;
 
+# deepin-wine
+RUN wget -O- https://deepin-wine.i-m.dev/setup.sh | sh;
 # WXwork
 RUN set -eux; \
-	wget -O- https://deepin-wine.i-m.dev/setup.sh | sh; \
 	apt update; \
 	apt install -y libsane1=1.2.1-5deepin1+rb1 libsane-common=1.2.1-5deepin1+rb1 com.qq.weixin.work.deepin; \
 	apt autoremove -y; \

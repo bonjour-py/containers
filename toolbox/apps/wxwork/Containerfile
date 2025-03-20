@@ -1,4 +1,4 @@
-FROM ghcr.io/bonjour-py/images/toolbox/deepin-wine
+FROM ghcr.io/bonjour-py/toolbox/deepin-wine
 
 RUN set -eux; \
 	apt update; \
