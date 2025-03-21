@@ -20,6 +20,19 @@ RUN set -eux; \
 	rm -rf /var/lib/apt/lists/*;
 
 RUN set -eux; \
+	apt update; \
+	apt install -y flatpak-xdg-utils; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+	echo '#' | tee /etc/profile.d/toolbox-flatpak-xdg-utils.sh; \
+	echo 'if [ -f /run/.containerenv ] && [ -f /run/.toolboxenv ]' | tee -a /etc/profile.d/toolbox-flatpak-xdg-utils.sh; \
+	echo 'then' | tee -a /etc/profile.d/toolbox-flatpak-xdg-utils.sh; \
+	echo '   PATH="/usr/libexec/flatpak-xdg-utils:$PATH"' | tee -a /etc/profile.d/toolbox-flatpak-xdg-utils.sh; \
+	echo '   export PATH' | tee -a /etc/profile.d/toolbox-flatpak-xdg-utils.sh; \
+	echo 'fi' | tee -a /etc/profile.d/toolbox-flatpak-xdg-utils.sh;
+
+RUN set -eux; \
 	rm /etc/apt/apt.conf.d/docker-gzip-indexes; \
 	rm /etc/apt/apt.conf.d/docker-no-languages;
 
