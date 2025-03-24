@@ -39,6 +39,7 @@ RUN set -eux; \
 	apt clean; \
 	rm -rf /var/lib/apt/lists/*;  \
 	\
+	sed -i -e '2e echo "export XDG_SESSION_TYPE=x11\nexport DISPLAY=:0\nexport XMODIFIERS=@im=ibus"' /opt/apps/com.qq.weixin.work.deepin/files/run.sh; \
 	sed -i -e 's@7z x "$APPDIR/$APPTAR" -o"$1"@7z x "$APPDIR/$APPTAR" -o"$1" || true@g' /opt/deepinwine/tools/run.sh /opt/deepinwine/tools/run_v2.sh /opt/deepinwine/tools/run_v3.sh /opt/deepinwine/tools/run_v4.sh; \
 	sed -i -e 's@Icon=com.qq.weixin.work.deepin@Icon=/opt/apps/com.qq.weixin.work.deepin/entries/icons/hicolor/48x48/apps/com.qq.weixin.work.deepin.svg@' /opt/apps/com.qq.weixin.work.deepin/entries/applications/com.qq.weixin.work.deepin.desktop; \
 	ln -sf /opt/apps/com.qq.weixin.work.deepin/entries/applications/com.qq.weixin.work.deepin.desktop /usr/share/applications/;
