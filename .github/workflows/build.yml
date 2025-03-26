@@ -4,113 +4,36 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  build-toolbox:
+  build-base:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     strategy:
       matrix:
         name: 
-          - deepin-wine
-          - kali
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/toolbox/${{ matrix.name }}
-          tags: type=raw,value=latest,enable={{ is_default_branch }}
-      - name: Buildah Build
-        id: build
-        uses: redhat-actions/buildah-build@v2
-        with:
-          oci: true
-          layers: true
-          context: toolbox/${{ matrix.name }}
-          containerfiles: toolbox/${{ matrix.name }}/Containerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - name: Push To ghcr.io
-        if: github.event_name != 'pull_request'
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build.outputs.image }}
-          tags: ${{ steps.build.outputs.tags }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          - toolbox/deepin-wine
+          - toolbox/kali
+    uses: ./.github/workflows/container.yml
+    with:
+      name: ${{ matrix.name }}
 
   build-toolbox-deepin-wine:
     runs-on: ubuntu-latest
-    needs: build-toolbox
-    permissions:
-      contents: read
-      packages: write
+    needs: build-base
     strategy:
       matrix:
         name: 
           - wxwork
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/toolbox/deepin-wine/${{ matrix.name }}
-          tags: type=raw,value=latest,enable={{ is_default_branch }}
-      - name: Buildah Build
-        id: build
-        uses: redhat-actions/buildah-build@v2
-        with:
-          oci: true
-          layers: true
-          context: toolbox/deepin-wine/${{ matrix.name }}
-          containerfiles: toolbox/deepin-wine/${{ matrix.name }}/Containerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - name: Push To ghcr.io
-        if: github.event_name != 'pull_request'
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build.outputs.image }}
-          tags: ${{ steps.build.outputs.tags }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/container.yml
+    with:
+      name: toolbox/deepin-wine/${{ matrix.name }}
 
   build-work:
     runs-on: ubuntu-latest
-    needs: build-toolbox
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/work
-          tags: type=raw,value=latest,enable={{ is_default_branch }}
-      - name: Buildah Build
-        id: build
-        uses: redhat-actions/buildah-build@v2
-        with:
-          oci: true
-          layers: true
-          context: work
-          containerfiles: work/Containerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - name: Push To ghcr.io
-        if: github.event_name != 'pull_request'
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build.outputs.image }}
-          tags: ${{ steps.build.outputs.tags }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    needs: build-base
+    uses: ./.github/workflows/container.yml
+    with:
+      name: work
