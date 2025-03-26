@@ -14,12 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          sparse-checkout: ${{ input.name }}
+          sparse-checkout: ${{ inputs.name }}
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ input.name }}
+          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.name }}
           tags: type=raw,value=latest,enable={{ is_default_branch }}
       - name: Buildah Build
         id: build
@@ -27,8 +27,8 @@ jobs:
         with:
           oci: true
           layers: true
-          context: ${{ input.name }}
-          containerfiles: ${{ input.name }}/Containerfile
+          context: ${{ inputs.name }}
+          containerfiles: ${{ inputs.name }}/Containerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Push To ghcr.io
