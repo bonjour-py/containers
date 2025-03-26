@@ -46,7 +46,7 @@ RUN set -eux; \
 	apt update; \
 	apt install -y com.qq.weixin.work.deepin; \
 	apt clean; \
-	rm -rf /var/lib/apt/lists/*;  \
+	rm -rf /var/lib/apt/lists/*; \
 	\
 	sed -i -e 's@7z x "$APPDIR/$APPTAR" -o"$1"@7z x "$APPDIR/$APPTAR" -o"$1" || true@g' /opt/deepinwine/tools/run.sh /opt/deepinwine/tools/run_v2.sh /opt/deepinwine/tools/run_v3.sh /opt/deepinwine/tools/run_v4.sh; \
 	\
@@ -56,3 +56,27 @@ RUN set -eux; \
 	echo 'export XMODIFIERS=@im=ibus' | tee -a /usr/local/bin/com.qq.weixin.work.deepin.sh; \
 	echo '/opt/apps/com.qq.weixin.work.deepin/files/run.sh' | tee -a /usr/local/bin/com.qq.weixin.work.deepin.sh; \
 	chmod +x /usr/local/bin/com.qq.weixin.work.deepin.sh;
+
+#python
+RUN set -eux; \
+	apt update; \
+	apt install -y \
+		python-is-python3 \
+		python3-requests \
+		python3-yaml \
+		python3-flask \
+	; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	apt update; \
+	apt install -y cargo; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*;
+
+RUN set -eux; \
+	apt update; \
+	apt install -y golang; \
+	apt clean; \
+	rm -rf /var/lib/apt/lists/*;
