@@ -19,7 +19,7 @@ jobs:
     with:
       name: ${{ matrix.name }}
 
-  build-toolbox-deepin-wine:
+  build-deepin-wine:
     needs: build-base
     strategy:
       matrix:
