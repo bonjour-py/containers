@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build-base:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         name: 
@@ -21,7 +20,6 @@ jobs:
       name: ${{ matrix.name }}
 
   build-toolbox-deepin-wine:
-    runs-on: ubuntu-latest
     needs: build-base
     strategy:
       matrix:
@@ -32,7 +30,6 @@ jobs:
       name: toolbox/deepin-wine/${{ matrix.name }}
 
   build-work:
-    runs-on: ubuntu-latest
     needs: build-base
     uses: ./.github/workflows/container.yml
     with:
