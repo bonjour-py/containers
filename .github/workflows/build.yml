@@ -22,7 +22,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/toolbox/{{ matrix.name }}
+          images: ghcr.io/${{ github.repository_owner }}/toolbox/${{ matrix.name }}
           tags: type=raw,value=latest,enable={{ is_default_branch }}
       - name: Buildah Build
         id: build
@@ -30,8 +30,8 @@ jobs:
         with:
           oci: true
           layers: true
-          context: toolbox/{{ matrix.name }}
-          containerfiles: toolbox/{{ matrix.name }}/Containerfile
+          context: toolbox/${{ matrix.name }}
+          containerfiles: toolbox/${{ matrix.name }}/Containerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Push To ghcr.io
@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/toolbox/deepin-wine/{{ matrix.name }}
+          images: ghcr.io/${{ github.repository_owner }}/toolbox/deepin-wine/${{ matrix.name }}
           tags: type=raw,value=latest,enable={{ is_default_branch }}
       - name: Buildah Build
         id: build
@@ -68,8 +68,8 @@ jobs:
         with:
           oci: true
           layers: true
-          context: toolbox/deepin-wine/{{ matrix.name }}
-          containerfiles: toolbox/deepin-wine/{{ matrix.name }}/Containerfile
+          context: toolbox/deepin-wine/${{ matrix.name }}
+          containerfiles: toolbox/deepin-wine/${{ matrix.name }}/Containerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Push To ghcr.io
