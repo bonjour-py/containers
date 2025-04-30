@@ -15,12 +15,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: ${{ inputs.name }}
-      - name: Cache image storage
-        uses: actions/cache@v4
-        with:
-          key: default
-          path: |
-            ~/.local/share/containers/storage
       - name: Extract image metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -37,8 +31,6 @@ jobs:
           containerfiles: ${{ inputs.name }}/Containerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          extra-args: |
-            --pull=newer
       - name: Push To ghcr.io
         uses: redhat-actions/push-to-registry@v2
         with:
