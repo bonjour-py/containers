@@ -18,7 +18,7 @@ jobs:
       - name: Cache image storage
         uses: actions/cache@v4
         with:
-          key: image-storage
+          key: default
           path: |
             ~/.local/share/containers/storage
       - name: Extract image metadata
