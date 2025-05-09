@@ -14,8 +14,9 @@ jobs:
     strategy:
       matrix:
         name: 
-          - toolbox/deepin-wine
           - toolbox/kali
+          - toolbox/deepin-wine
+          - toolbox/firefox
     uses: ./.github/workflows/container.yml
     with:
       name: ${{ matrix.name }}
@@ -29,9 +30,3 @@ jobs:
     uses: ./.github/workflows/container.yml
     with:
       name: toolbox/deepin-wine/${{ matrix.name }}
-
-  build-work:
-    needs: build-base
-    uses: ./.github/workflows/container.yml
-    with:
-      name: work
