@@ -3,4 +3,9 @@ FROM quay.io/toolbx-images/alpine-toolbox
 RUN set -eux; \
 	apk upgrade --no-cache; \
 	apk add --no-cache font-terminus font-inconsolata font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra; \
-	apk add --no-cache firefox;
+	\
+	apk add --no-cache firefox; \
+	\
+	echo '#!/bin/bash' | tee /usr/local/bin/start; \
+	echo 'exec firefox --profile "$@"' | tee -a /usr/local/bin/start; \
+	chmod +x /usr/local/bin/start;
