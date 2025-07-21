@@ -17,6 +17,7 @@ jobs:
           - toolbox/kali
           - toolbox/deepin-wine
           - toolbox/firefox
+          - owasp/benchmark
     uses: ./.github/workflows/container.yml
     with:
       name: ${{ matrix.name }}

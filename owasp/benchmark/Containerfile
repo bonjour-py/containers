@@ -1,0 +1,28 @@
+FROM docker.io/library/maven:3-eclipse-temurin-11-noble
+
+WORKDIR /owasp/
+
+RUN set -eux; \
+	git clone https://github.com/OWASP-Benchmark/BenchmarkUtils.git; \
+	cd BenchmarkUtils; \
+	mvn install;
+
+RUN set -eux; \
+	git clone https://github.com/OWASP-Benchmark/BenchmarkJava.git; \
+	cd BenchmarkJava; \
+	mvn clean package cargo:install; \
+	mvn install;
+
+RUN set -eux; \
+	useradd -d /home/bench -m -s /bin/bash bench; \
+	echo bench:bench | chpasswd; \
+	chown -R bench . ;
+
+ENV PATH /owasp/BenchmarkJava:$PATH
+
+WORKDIR /owasp/BenchmarkJava
+EXPOSE 8443
+CMD ./runRemoteAccessibleBenchmark.sh
+
+# smoke test
+RUN timeout 90 ./runBenchmark.sh || [ $? -eq 124 ];
