@@ -5,6 +5,7 @@ RUN set -eux; \
 	echo bench:bench | chpasswd; \
 	mkdir /benchmark; \
 	git clone https://github.com/OWASP-Benchmark/BenchmarkJava.git; \
+	sed -i -e 's@<ratchetFrom>origin/master</ratchetFrom>@<!-- <ratchetFrom>origin/master</ratchetFrom> -->@g' BenchmarkJava/pom.xml; \
 	cp -rt /benchmark \
 		BenchmarkJava/src \
 		BenchmarkJava/.mvn \
