@@ -1,28 +1,29 @@
-FROM docker.io/library/maven:3-eclipse-temurin-11-noble
-
-WORKDIR /owasp/
-
-RUN set -eux; \
-	git clone https://github.com/OWASP-Benchmark/BenchmarkUtils.git; \
-	cd BenchmarkUtils; \
-	mvn install;
-
-RUN set -eux; \
-	git clone https://github.com/OWASP-Benchmark/BenchmarkJava.git; \
-	cd BenchmarkJava; \
-	mvn clean package cargo:install; \
-	mvn install;
+FROM public.ecr.aws/docker/library/maven:3-eclipse-temurin-11-noble
 
 RUN set -eux; \
 	useradd -d /home/bench -m -s /bin/bash bench; \
 	echo bench:bench | chpasswd; \
-	chown -R bench . ;
+	mkdir /benchmark; \
+	git clone https://github.com/OWASP-Benchmark/BenchmarkJava.git; \
+	cp -rt /benchmark \
+		BenchmarkJava/src \
+		BenchmarkJava/.mvn \
+		BenchmarkJava/.keystore \
+		BenchmarkJava/pom.xml \
+		BenchmarkJava/DevStyleXml.prefs \
+		BenchmarkJava/DevStyleHtml.prefs \
+		; \
+	rm -r BenchmarkJava
 
-ENV PATH /owasp/BenchmarkJava:$PATH
+WORKDIR /benchmark
 
-WORKDIR /owasp/BenchmarkJava
+RUN set -eux;  \
+	mvn initialize; \
+	mvn package cargo:configure -Pdeploy -Drunenv=remote; \
+	chown -R bench .;
+
 EXPOSE 8443
-CMD ./runRemoteAccessibleBenchmark.sh
+CMD mvn package cargo:run -Pdeploy -Drunenv=remote
 
 # smoke test
-RUN timeout 90 ./runBenchmark.sh || [ $? -eq 124 ];
+RUN timeout 120 mvn package cargo:run -Pdeploy -Drunenv=remote || [ $? -eq 124 ];
