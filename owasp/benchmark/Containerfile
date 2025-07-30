@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/maven:3-eclipse-temurin-11-noble
+FROM docker.io/library/maven:3-eclipse-temurin-11-noble
 
 RUN set -eux; \
 	useradd -d /home/bench -m -s /bin/bash bench; \
