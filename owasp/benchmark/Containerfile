@@ -27,4 +27,4 @@ EXPOSE 8443
 CMD mvn package cargo:run -Pdeploy -Drunenv=remote
 
 # smoke test
-RUN timeout 120 mvn package cargo:run -Pdeploy -Drunenv=remote || [ $? -eq 124 ];
+RUN timeout 60 mvn package cargo:run -Pdeploy -Drunenv=remote || [ $? -eq 124 ];
